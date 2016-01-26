@@ -6,7 +6,7 @@ CFLAG   = -DCPP -DGPP
  
 INPUT = hertz2.csim.c
 TARGET = csim
-  
+   
 $(TARGET): $(INPUT)
 	$(C) $(CFLAG) $(LIB) $(INPUT) $(CSIM) -lm -o $(TARGET)
  
