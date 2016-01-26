@@ -11,26 +11,31 @@ INPUT3 = twoworld.c
 INPUT4 = hiho.c
 INPUT5 = hiho2.c
 
-TARGET = csim
+TARGET = hertz2.csim
+TARGET1 = hertz3.csim
+TARGET2 = oneworld.csim
+TARGET3 = twoworld.csim
+TARGET4 = hiho.csim
+TARGET5 = hiho2.csim
   
-$(INPUT): $(INPUT)
-	$(C) $(CFLAG) $(LIB) $(TARGET) $(CSIM) -lm -o $(TARGET)
+$(TARGET): $(INPUT)
+	$(C) $(CFLAG) $(LIB) $(INPUT) $(CSIM) -lm -o $(TARGET)
 
-$(INPUT1): $(INPUT1)
-	$(C) $(CFLAG) $(LIB) $(INPUT1) $(CSIM) -lm -o $(TARGET)
+$(TARGET1): $(INPUT1)
+	$(C) $(CFLAG) $(LIB) $(INPUT1) $(CSIM) -lm -o $(TARGET1)
 
-$(INPUT2): $(INPUT2)
-	$(C) $(CFLAG) $(LIB) $(INPUT2) $(CSIM) -lm -o $(TARGET)
+$(TARGET2): $(INPUT2)
+	$(C) $(CFLAG) $(LIB) $(INPUT2) $(CSIM) -lm -o $(TARGET2)
 
-$(INPUT3): $(INPUT3)
-	$(C) $(CFLAG) $(LIB) $(INPUT3) $(CSIM) -lm -o $(TARGET)
+$(TARGET3): $(INPUT3)
+	$(C) $(CFLAG) $(LIB) $(INPUT3) $(CSIM) -lm -o $(TARGET3)
 
-$(INPUT4): $(INPUT4)
-	$(C) $(CFLAG) $(LIB) $(INPUT4) $(CSIM) -lm -o $(TARGET)
+$(TARGET4): $(INPUT4)
+	$(C) $(CFLAG) $(LIB) $(INPUT4) $(CSIM) -lm -o $(TARGET4)
  
-$(INPUT5): $(INPUT5)
-	$(C) $(CFLAG) $(LIB) $(INPUT5) $(CSIM) -lm -o $(TARGET)
+$(TARGET5): $(INPUT5)
+	$(C) $(CFLAG) $(LIB) $(INPUT5) $(CSIM) -lm -o $(TARGET5)
  
 clean:
-	$(RM) *.o *.output core *~ *# $(TARGET)
+	$(RM) *.o *.output core *~ *# $(TARGET) *.csim
 
