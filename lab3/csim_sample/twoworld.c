@@ -12,7 +12,7 @@ extern "C" void sim()		// Alice is the main process
 	Bob();			// Alice gives Bob a chance to do the same
 	for(i=1;i<10;i++)
 	{
-//		hold(uniform(0,10));
+		hold(uniform(0,10));
 		cout << "Alice says hello " << i << " times." << endl;
 	}
 }
@@ -23,7 +23,7 @@ void Bob()
 	create("Bob");
 	for(i=1;i<10;i++)
 	{
-//		hold(uniform(0,10));
+		//hold(uniform(0,10));
 		cout << "Bob says hello " << i << " times." << endl;
 	}
 }
