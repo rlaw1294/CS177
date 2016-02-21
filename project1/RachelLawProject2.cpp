@@ -4,10 +4,10 @@
 #include <stdio.h>
 using namespace std;
 
-#define TINY 1.e-20	// a very small time period
+#define TINY 1.e-20		// a very small time period
 #define NUMCELLS 20	// 120 cells aka 1/4 mi 
-#define TOTALTIME 25	// 1440 minutes in a day. 24hr * 60min/hr
-#define NUMCARS 2
+//#define TOTALTIME 25	// 1440 minutes in a day. 24hr * 60min/hr
+#define NUMCARS 3
 #define CARLENGTH 2.0
 
 facility_set *road;
@@ -36,7 +36,9 @@ void Car::setup_car(int index) {
 	speed = 1;
 	distanceTraveled = 0;
 	isSlowing = false;
-	hold_time = 1;
+	hold_time = index+TINY*index;
+	(*road)[nose].reserve();
+	(*road)[tail].reserve();
 }
 
 void Car::print_info(int id) {
@@ -46,22 +48,39 @@ void Car::print_info(int id) {
 int num_cells = NUMCELLS;
 int num_cars = NUMCARS;
 Car car_array[NUMCARS];
+void car_maker();
 void monitorCarCollision(int id);
+
+int total_time = 25;
 
 extern "C" void sim()		// main process
 {
 	trace_on();
 	create("sim");
 	road = new facility_set("road", NUMCELLS);
-	for (int i=0; i<NUMCARS; i++) {
+	/*for (int i=0; i<NUMCARS; i++) {
 		car_array[i].setup_car(i);
-		car_array[i].move_car(i);
-	}
+		move_cars(i);
+	}*/
 	
-	hold (TOTALTIME);
+	car_maker();
+
+	hold(total_time);
+	//hold (TOTALTIME);
 	// Print Car Info
 	for (int i=0; i<NUMCARS; i++) {
 		car_array[i].print_info(i);
+	}
+}
+
+void car_maker() {
+	create("car_maker");
+	for (int i=0; i<NUMCARS; i++) {
+		car_array[i].setup_car(i);
+	}
+
+	for (int i=0; i<NUMCARS; i++) {
+		car_array[i].move_car(i);
 	}
 }
 
@@ -96,10 +115,7 @@ void monitorCarCollision(int id){
 void Car::move_car(int id) {
 	create("move_car");
 	
-	(*road)[car_array[id].nose].reserve();
-	(*road)[car_array[id].tail].reserve();
-
-	while (clock < TOTALTIME){
+	while (clock < total_time){
 		cout << "id: " << id << "\tMOVE CARS!\n";
 		//cout << "clock: " << clock << "\ttotal_time: " << TOTALTIME << endl;
 		//detect for car collision
@@ -117,6 +133,7 @@ void Car::move_car(int id) {
 			}
 		}*/
 		//calculate the hold time based on speed
+		/*car_array[id].speed = 5;
 		if(car_array[id].speed == 0){
 			car_array[id].hold_time = 0;
 		}
@@ -134,23 +151,23 @@ void Car::move_car(int id) {
 		}
 		else if(car_array[id].speed == 5){
 			car_array[id].hold_time = (.5/CARLENGTH);
-		} 
+		} */
 
 		// Release previous nose, Reserve nose cell it will move to
-		//cout << "RELEASING " << car_array[id].nose % NUMCELLS << endl;
-		(*road)[car_array[id].nose % NUMCELLS].release();	
+		//(*road)[car_array[id].nose % NUMCELLS].release();	
 		car_array[id].nose++;
-		//cout << "RESERVING " << car_array[id].nose % NUMCELLS << endl;
-		(*road)[car_array[id].nose % NUMCELLS].reserve();
+		//(*road)[car_array[id].nose % NUMCELLS].reserve();
 		
 		// Hold for time for car to move
 		hold(car_array[id].hold_time);
 		
+		cout << "clock: " << clock << "\ttotal_time: " << total_time << endl;
 		// Car has moved to next cell. Release previous tail cell, Reserve new tail cell
 		car_array[id].distanceTraveled++;
-		(*road)[car_array[id].tail % NUMCELLS].release();
+		//(*road)[car_array[id].tail % NUMCELLS].release();
 		car_array[id].tail++;
-		(*road)[car_array[id].tail % NUMCELLS].reserve();
+		//(*road)[car_array[id].tail % NUMCELLS].reserve();
+		car_array[id].speed++;
 	}
 }
 
