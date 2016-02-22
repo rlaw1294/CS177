@@ -6,8 +6,8 @@
 using namespace std;
 
 #define TINY 1.e-20	// a very small time period
-#define NUMCELLS 50	// 120 cells aka 1/4 mi, EASIER TO SEE TRAFFIC LIGHT RESULTS/EFFECTS WITH LESS CELLS
-#define TOTALTIME 50	// 1440 minutes in a day. 24hr * 60min/hr, 1440 is too long for this simulation!!!
+#define NUMCELLS 120	// 120 cells aka 1/4 mi, EASIER TO SEE TRAFFIC LIGHT RESULTS/EFFECTS WITH LESS CELLS
+#define TOTALTIME 100	// 1440 minutes in a day. 24hr * 60min/hr, 1440 is too long for this simulation!!!
 #define NUMCARS 10	// can have up to 10 cars for our print func to properly output nicely
 #define CARLENGTH 2
 #define TRAFFICLIGHT NUMCELLS-2 // traffic light at cells, 118 to 119
