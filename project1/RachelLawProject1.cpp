@@ -11,6 +11,11 @@ using namespace std;
 #define CARLENGTH 2.0
 
 facility_set *road;
+int num_cells = NUMCELLS;
+int num_cars = NUMCARS;
+Car car_array[NUMCARS];	
+void monitorCarCollision(int id);
+void print_track();
 
 class Car {
 	public:
@@ -43,17 +48,18 @@ void Car::print_info(int id) {
 	cout << "id: " << this->id << "\tnose: " << nose << "\ttail: " << tail << "\tspeed: " << speed << "\tDistance_travled: " <<  distanceTraveled << "\tisSLowing: " << isSlowing << "\thold_time: " << hold_time << endl;
 }
 
-int num_cells = NUMCELLS;
-int num_cars = NUMCARS;
-Car car_array[NUMCARS];	
-void monitorCarCollision(int id);
-void print_track();
-
 void print_track() {
+	int track[NUMCELLS] = {-1};
+	for (int i=0; i<NUMCARS; i++) {
+		track[car_array[i].nose] = car_array[i].id;
+		track[car_array[i].tail] = car_array[i].id;
+	}
 	for (int i=0; i<NUMCELLS; i++) {
+		if (track[i] == -1) cout << "-";
+		else cout << track[i];
 		//cout << "cell " << i << ": ";
-		if ((*road)[i].status() == BUSY) cout << "x";
-		else cout << "-";
+		//if ((*road)[i].status() == BUSY) cout << "x";
+		//else cout << "-";
 	}
 }
 
