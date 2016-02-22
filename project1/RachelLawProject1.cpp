@@ -6,10 +6,12 @@
 using namespace std;
 
 #define TINY 1.e-20	// a very small time period
-#define NUMCELLS 120	// 120 cells aka 1/4 mi 
-#define TOTALTIME 20	// 1440 minutes in a day. 24hr * 60min/hr
+#define NUMCELLS 50	// 120 cells aka 1/4 mi, EASIER TO SEE TRAFFIC LIGHT RESULTS/EFFECTS WITH LESS CELLS
+#define TOTALTIME 50	// 1440 minutes in a day. 24hr * 60min/hr, 1440 is too long for this simulation!!!
 #define NUMCARS 10	// can have up to 10 cars for our print func to properly output nicely
 #define CARLENGTH 2
+#define TRAFFICLIGHT NUMCELLS-2 // traffic light at cells, 118 to 119
+
 
 class Car {
 	public:
@@ -33,6 +35,7 @@ int num_cells = NUMCELLS;
 int num_cars = NUMCARS;
 void print_track();
 int get_lookahead_indicator(int id);
+void traffic_light();
 
 void Car::setup_car(int index) {
 	cout << "setting up car " << index << endl;
@@ -50,12 +53,13 @@ void Car::setup_car(int index) {
 
 void Car::print_info(int id) {
 	print_track();
-	cout 	<< "\t\tid: " << this->id 
+	cout 	<< "\tid: " << this->id 
 		<< setw(9) << "\tclk: " << clock 
-		<< setw(9) << "\tnose: " << nose 
-		<< setw(9) << "\ttail: " << tail 
-		<< setw(9) << "\tspd: " << speed 
-		<< setw(9) << "\ttargetspd: " << target_speed
+		<< setw(8) << "\tpos: " << tail << "," << nose
+		//<< setw(9) << "\tnose: " << nose 
+		//<< setw(9) << "\ttail: " << tail 
+		<< setw(7) << "\tspd: " << speed 
+		<< setw(9) << "\ttgtspd: " << target_speed
 		<< setw(9) << "\ttotdist: " <<  distanceTraveled 
 		<< setw(9) << "\tacc: " << acceleration; 
 		//<< setw(8) << "\thold: " << hold_time << endl;
@@ -83,8 +87,9 @@ extern "C" void sim()		// main process
 	road = new facility_set("road", NUMCELLS);
 	
 	for (int i=0; i<NUMCARS; i++) car_array[i].setup_car(i);
+	traffic_light();
 	for (int i=0; i<NUMCARS; i++) car_array[i].move_car(i);
-
+	
 	hold (TOTALTIME);
 	// Print Car Info
 	//for (int i=0; i<NUMCARS; i++) {
@@ -191,12 +196,35 @@ void Car::move_car(int id) {
 		}
 
 		// Print Info
-		//print_track();
-		//for (int i=0; i<NUMCARS; i++) {
-			car_array[id].print_info(id);
-		//}
+		car_array[id].print_info(id);
 	}
 }
 
-
+void traffic_light() {
+	create("traffic_light");
+	
+	// start as red light
+	(*road)[TRAFFICLIGHT].reserve();
+	(*road)[TRAFFICLIGHT+1].reserve();
+	hold(uniform(30.0/60.0,90.0/60.0));
+	double hold_time = 0.0;
+	while (clock < TOTALTIME) {
+		// Green - exponential dist 2 minutes
+		(*road)[TRAFFICLIGHT].release();
+		(*road)[TRAFFICLIGHT+1].release();
+		hold_time = expntl(2);
+		cout << " GREEN LIGHT: " << hold_time << " minutes\n";
+		hold(hold_time);
+		// Yellow - 10 seconds
+		(*road)[TRAFFICLIGHT].reserve();
+		(*road)[TRAFFICLIGHT+1].reserve();
+		hold_time = 10.0/60.0;
+		cout << " YELLOW LIGHT: " << hold_time << " minutes\n";
+		hold(hold_time);
+		// Red - uniform between 30 and 90
+		hold_time = uniform(30.0/60.0 , 90.0/60.0);
+		cout << " RED LIGHT: " << hold_time << " minutes\n";
+		hold(hold_time);
+	}
+}
 
