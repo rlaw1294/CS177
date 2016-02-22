@@ -45,8 +45,17 @@ void Car::print_info(int id) {
 
 int num_cells = NUMCELLS;
 int num_cars = NUMCARS;
-Car car_array[NUMCARS];
+Car car_array[NUMCARS];	
 void monitorCarCollision(int id);
+void print_track();
+
+void print_track() {
+	for (int i=0; i<NUMCELLS; i++) {
+		//cout << "cell " << i << ": ";
+		if ((*road)[i].status() == BUSY) cout << "x";
+		else cout << "-";
+	}
+}
 
 extern "C" void sim()		// main process
 {
@@ -71,7 +80,7 @@ void monitorCarCollision(int id){
 	int lookAhead = 0;
 	if (car_array[id].speed == 0) { lookAhead = 0; }
 	else if (car_array[id].speed == 1) { lookAhead = 2; }
-	else if (car_array[id].speed == 2) { lookAhead = 3; }
+	else if (car_array[id].speed == 2) { lookAhead = 2; }
 	else if (car_array[id].speed == 3) { lookAhead = 4; }
 	else if (car_array[id].speed == 4) { lookAhead = 6; }
 	else if (car_array[id].speed == 5) { lookAhead = 8; }
@@ -100,7 +109,7 @@ void Car::move_car(int id) {
 	(*road)[car_array[id].tail].reserve();
 
 	while (clock < TOTALTIME){
-		cout << "id: " << id << "\tMOVE CARS!\n";
+		//cout << "id: " << id << "\tMOVE CARS!\n";
 		//cout << "clock: " << clock << "\ttotal_time: " << TOTALTIME << endl;
 		//detect for car collision
 		//monitorCarCollision(id);
@@ -151,6 +160,7 @@ void Car::move_car(int id) {
 		(*road)[car_array[id].tail % NUMCELLS].release();
 		car_array[id].tail++;
 		(*road)[car_array[id].tail % NUMCELLS].reserve();
+		print_track();
 	}
 }
 
