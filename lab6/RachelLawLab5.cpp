@@ -6,75 +6,51 @@
 #include <math.h>
 using namespace std;
 
-#define SAMPLE_SIZE 32
-
-double A = 10.0;
-double *left_input;
-double *right_input;
-double *uniform_input;
-double *left_triangle_array;
-double *right_triangle_array;
-double *uniform_array;
+#define A 10.0
+#define MAX_SAMPLE_SIZE 32
+double *samples;
+double *left_tri_results;
+double *right_tri_results;
+double *uniform_results;
 
 
-double PDFLeftTriangle(double a) {
-	//return uniform(0,a);
-	return ((2/a)*(a-uniform(0,a)))/(a);
-}
+double PDFLeftTriangle(double A, double x) return ((2/A)*(A-x))/A;
+double PDFRightTriangle(double A, double x) return ((2/A)*(x))/A;
+double PDFUniform(double a) return 1/a;
 
-double PDFRightTriangle(double a) {
-	return ((2/a)*(uniform(0,a)))/(a);
-}
-
-double PDFUniform(double a) {
-	return 1/a;
-}
-
-void FillPDFLeftTriangle_array(double *ar, int ar_size, double a) {
-	for (int i=0; i<ar_size; i++) {
-		ar[i] = PDFLeftTriangle(a);
+// Sample size should be same as results size
+void DoPDF(double *samples, double *results, int samples_size, double A, double (*PDFFunc)(double,double)) {
+	// Get Samples
+	for (int i=0; i<samples_size; i++) {
+		double samples[i] = uniform(0,1);
+		results[i] = PDFFunc(A, samples[i]);
 	}
 }
 
-void FillPDFRightTriangle_array(double *ar, int ar_size, double a) {
-	for (int i=0; i<ar_size; i++) {
-		ar[i] = PDFRightTriangle(a);
-	}
-}
-
-void FillPDFUniform_array(double *ar, int ar_size, double a) {
-	for (int i=0; i<ar_size; i++) {
-		ar[i] = PDFUniform(a);
-	}
-}
-
-void print_array(double* ar, int ar_size) {
+void PrintArray(double* ar, int ar_size) {
 	for (int i=0; i<ar_size; i++) {
 		cout << ar[i] << endl;
 	}
-
 }
 
 extern "C" void sim()
 {
+	// Edit this vector for all sample sizes you want to try
+	vector<int> samples_sizes[] = {MAX_SAMPLE_SIZE};
+
 	create("sim");
-	
-	left_input = new double [SAMPLE_SIZE];
-	right_input = new double [SAMPLE_SIZE];
-	uniform_input = new double [SAMPLE_SIZE];
-	left_triangle_array = new double [SAMPLE_SIZE];
-	right_triangle_array = new double [SAMPLE_SIZE];
-	uniform_array = new double [SAMPLE_SIZE];
-	
-	FillPDFLeftTriangle_array(left_triangle_array, SAMPLE_SIZE, A);
-	FillPDFRightTriangle_array(right_triangle_array, SAMPLE_SIZE, A);
-	FillPDFUniform_array(uniform_array, SAMPLE_SIZE, A);
+	samples = new double [MAX_SAMPLE_SIZE];
+	left_tri_results = new double [MAX_SAMPLE_SIZE];
+	right_tri_results = new double [MAX_SAMPLE_SIZE];
+	uniform_results = new double [MAX_SAMPLE_SIZE];
 
-
-	print_array(left_triangle_array, SAMPLE_SIZE);
-	print_array(right_triangle_array, SAMPLE_SIZE);
-	print_array(uniform_array, SAMPLE_SIZE);
+	for (int i=0; i<samples_sizes.size(); i++) {
+		DoPDF(samples, left_tri_results, samples_sizes.at(i), A, PDFLeftTriangle);
+		DoPDF(samples, right_tri_results, samples_sizes.at(i), A, PDFRightTriangle);
+		DoPDF(samples, uniform_results, samples_sizes.at(i), A, PDFUniform);
+	}
 	
-	
-
+	print_array(left_triangle_array, MAX_SAMPLE_SIZE);
+	print_array(right_triangle_array, MAX_SAMPLE_SIZE);
+	print_array(uniform_array, MAX_SAMPLE_SIZE);
 }
