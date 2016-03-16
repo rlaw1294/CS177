@@ -4,9 +4,9 @@ CSIM    = /usr/csshare/pkgs/csim_cpp-19.0/lib/csim.cpp.a
 RM      = /bin/rm -f
 CFLAG   = -DCPP -DGPP
  
-INPUT = hertz2.csim.c
+INPUT = RachelLawLab5.cpp
 TARGET = csim
-   
+  
 $(TARGET): $(INPUT)
 	$(C) $(CFLAG) $(LIB) $(INPUT) $(CSIM) -lm -o $(TARGET)
  

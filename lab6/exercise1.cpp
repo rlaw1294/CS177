@@ -31,13 +31,6 @@ double estimate_pi(const int &num) {
 }
 
 
-double PDFLeftTriangle(int a) {
-	return (2/a)*(a-rand()%a)
-}
-
-
-
-
 // A = pi*r^2
 int main() {
 	srand(time(NULL));
