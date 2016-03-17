@@ -33,6 +33,16 @@ void PrintArray(double* ar, int ar_size) {
 	}
 }
 
+void printCSV(vector<double> v) {
+	fstream myfile;
+	myfile.open("lab6.csv", std::fstream::in | std::fstream::out | std::fstream::app);
+	myfile << "NEW RUN\n";
+	for (unsigned int i = 0; i < v.size(); i++) {
+		myfile << v.at(i) << endl;
+	}
+	myfile << ", ";
+}
+
 extern "C" void sim()
 {
 	// Edit this vector for all sample sizes you want to try
