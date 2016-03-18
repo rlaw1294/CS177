@@ -4,7 +4,7 @@ CSIM    = /usr/csshare/pkgs/csim_cpp-19.0/lib/csim.cpp.a
 RM      = /bin/rm -f
 CFLAG   = -DCPP -DGPP
  
-INPUT = RachelLawLab5.cpp
+INPUT = RachelLawLab6_2.cpp
 TARGET = csim
   
 $(TARGET): $(INPUT)
